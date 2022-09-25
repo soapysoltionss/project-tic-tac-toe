@@ -1,3 +1,4 @@
 # project-tic-tac-toe
 
-Hi, this is a school project
+Hi, this is a school project.
+Done by:
