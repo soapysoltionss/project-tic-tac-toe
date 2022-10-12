@@ -3,8 +3,8 @@
 Hi, this is a school project.
 Done by: 
 
-Javier Ng
-Timothy Neam
-Benjamin Liew
-Jia Wen
-Gek Teng
+Javier Ng \n
+Timothy Neam \n
+Benjamin Liew \n
+Jia Wen \n
+Gek Teng \n
