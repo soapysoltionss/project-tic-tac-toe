@@ -1,10 +1,5 @@
 # project-tic-tac-toe
 
-Hi, this is a school project.
-Done by: 
+Hi, this is a school project on Tic Tac Toe where the game allows single player or two player mode.
 
-Javier Ng \n
-Timothy Neam \n
-Benjamin Liew \n
-Jia Wen \n
-Gek Teng \n
+Done by: Javier Ng, Timothy Neam, Benjamin Liew, Jia Wen, Gek Teng
