@@ -3,17 +3,21 @@
 
 int main();
 int board();
-int minimax();
-int min();
-int max();
 int win();
+int max();
+int min();
+int minimax();
+
+// assumptions:
+// 1) randomise players. Cannot be player or ai start first everytime
+// 2) Do not allow the ai to pick the spot that is not empty
 
 char player='x', ai='o', empty=' '; 
 int row, col;
 char board_spots[3][3] = {
-                         { 'o' , 'o' , 'x' }, 
-                         { ' ' , 'o' , 'o' }, 
-                         { ' ' , ' ' , 'o' }
+                         { 'o' , 'x' , 'x' }, 
+                         { 'x' , ' ' , 'o' }, 
+                         { 'x' , 'x' , 'o' }
                         };
 
 int main() {
@@ -24,7 +28,7 @@ int main() {
     max();
 }
 
-// this function is to read the board location for eg
+// this function is to read the board location
 
 int board() {
     // declare row and col as 0 because array starts from 0
@@ -96,9 +100,10 @@ int win() {
     // check for diagonal wins
     // check if box 0, 4, 8 OR box 3, 4, 6 are the same
     // box 0 = [0][0], box 4 = [1][1] , box 8 = [2][2], box 3 = [1][0], box 4 = [1][1], box 6 = [2][0]
-    if (board_spots[0][0] == board_spots[1][1] && board_spots[1][1] == board_spots[2][2]
-    || board_spots[0][2] == board_spots[1][1] && board_spots[1][1] == board_spots[2][0]) {
-            if (board_spots[0][0] == 'x' || board_spots[0][2] == 'x') {
+
+    // check for diagonal win in "\" slope
+    if (board_spots[0][0] == board_spots[1][1] && board_spots[1][1] == board_spots[2][2]) {
+            if (board_spots[0][0] == 'x') {
                 printf("Player1 wins with x on diagonal");
             }
             else if (board_spots[0][0] == 'o') {
@@ -108,8 +113,27 @@ int win() {
                 return 0;
             }
     }
-    // After checking for rows, columns and diagonal for wins, if there are no winner, then return 0 to continue the game
-    return 0;
+    // check for the diagonal win in "/" slope
+        if (board_spots[0][2] == board_spots[1][1] && board_spots[1][1] == board_spots[2][0]) {
+            if (board_spots[0][2] == 'x') {
+                printf("Player1 wins with x on diagonal");
+            }
+            else if (board_spots[0][2] == 'o') {
+                printf("AI wins with o on diagonal");
+            } 
+            else {
+                return 0;
+            }
+    }
+
+    // After checking for rows, columns and diagonal for wins, 
+    // if there are no winner, 
+        // then check if there are empty spots, 
+        // if there are 
+            // then return 0,
+        // else 
+            // print tie if there are no winners
+    printf("Tie");
 }
 
 // max() is the maximiser function
