@@ -3,16 +3,20 @@
 
 int main();
 int board();
-int minimax();
-int min();
-int max();
 int win();
+int max();
+int min();
+int minimax();
+
+// assumptions:
+// 1) randomise players. Cannot be player or ai start first everytime
+// 2) Do not allow the ai to pick the spot that is not empty
 
 char player='x', ai='o', empty=' '; 
 int row, col;
 char board_spots[3][3] = {
                          { 'o' , 'x' , 'x' }, 
-                         { 'x' , 'o' , 'o' }, 
+                         { 'x' , ' ' , 'o' }, 
                          { 'x' , 'x' , 'o' }
                         };
 
@@ -121,8 +125,15 @@ int win() {
                 return 0;
             }
     }
-    // After checking for rows, columns and diagonal for wins, if there are no winner, then return 0 to continue the game
-    return 0;
+
+    // After checking for rows, columns and diagonal for wins, 
+    // if there are no winner, 
+        // then check if there are empty spots, 
+        // if there are 
+            // then return 0,
+        // else 
+            // print tie if there are no winners
+    printf("Tie");
 }
 
 // max() is the maximiser function
