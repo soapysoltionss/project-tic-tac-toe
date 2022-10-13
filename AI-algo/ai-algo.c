@@ -2,31 +2,40 @@
 #include <stdbool.h>
 
 int main();
-int board();
-int win();
-int max();
-int min();
-int minimax();
+int randomise_turns();
+int board(); //create the board
+int win(); //check for rows, columns or diagonals for win
+bool empty_spots();
+int maxVal(); // create the maximiser function
+int minVal(); // create the minimiser function
+int minimax(); // create the minimax function
+int move(); // create the move function
 
 // assumptions:
 // 1) randomise players. Cannot be player or ai start first everytime
 // 2) Do not allow the ai to pick the spot that is not empty
 
 char player='x', ai='o', empty=' '; 
-int row, col;
+int row, col, depth;
+bool maxTurn;
+
 char board_spots[3][3] = {
-                         { 'o' , 'x' , 'x' }, 
-                         { 'x' , ' ' , 'o' }, 
-                         { 'x' , 'x' , 'o' }
+                         { 'o' , 'o' , 'x' }, 
+                         { 'x' , 'x' , 'o' }, 
+                         { 'o' , 'o' , 'x' }
                         };
 
 int main() {
+    randomise_turns();
     board();
     win(board_spots[row][col]);
-    minimax();
-    min();
-    max();
 }
+
+// this function is to randmise between player or ai
+int randomise_turns() {
+
+}
+
 
 // this function is to read the board location
 
@@ -47,7 +56,7 @@ int board() {
             // Row2   2 , 0 | 2 , 1  | 2 , 2
             //         Box6 |  Box7  | Box8
 
-            printf("row[%d], col[%d] = %d \n", row,col,board_spots[row][col]);
+            printf("row[%d], col[%d] = %d \n", row, col, board_spots[row][col]);
         }
     }
     return 0;
@@ -126,27 +135,107 @@ int win() {
             }
     }
 
+    // if empty_spots function returns true, 
+    if (empty_spots() == true) {
+        // run minimax algorithm
+        minimax(); 
+    }
+    // if empty_spots function returns false, then print this game is a tie because there are no winnners
+    else {
+        printf("This game is a Tie!");   
+    }
+}
+
+bool empty_spots() {
     // After checking for rows, columns and diagonal for wins, 
     // if there are no winner, 
-        // then check if there are empty spots, 
-        // if there are 
-            // then return 0,
-        // else 
-            // print tie if there are no winners
-    printf("Tie");
-}
+    // check if there are empty spots,
 
-// max() is the maximiser function
-int max() {
+    // add a variable for empty spot and set to 0
+    // once it hit 1 then return true
 
-}
+    int empty = 0;
+    int not_empty = 0;
 
-// min() is the minimiser function
-int min() {
+    for (row = 0; row < 3; ++row) {
+        for (col = 0; col < 3; ++col) {
+            if (board_spots[row][col] == ' ') {
+            // if there are, then add 1 to empty
+                empty += 1;
+            }
+            // else, add 1 to not empty 
+            else { 
+                not_empty += 0;
+            } 
+        }
+    }
 
+    if (empty == 1) {
+    // if there are, then return true,
+        return true;
+    }
+    // else, return false  
+    else { 
+        return false;
+    } 
+    
 }
 
 // minimax function to run the minimax algorithm
 int minimax() {
+    // testing if i can call this function if there are empty spaces to start the minimax algo
+    printf("in minimax function now");
 
+    // call the max function
+    maxVal();
+
+    // call the min function
+    minVal();
+}
+
+// max() is the maximiser function
+int maxVal() {
+    // create a variable called best for comparing the moves
+    int best = -100;
+    // for every row
+    for (row = 0; row < 3; row++) {
+        // for every col
+        for (col = 0; col < 3; col++) {
+            // check if theres an empty spot
+            if (board_spots[row][col] == ' ') {
+                // if its empty, make the move
+                board_spots[row][col] = player;
+
+                // if its the max value, choose it
+
+            }
+        }
+    }
+}
+
+// // min() is the minimiser function
+int minVal() {
+    // create a variable called best for comparing the moves
+    int best = 100;
+    // for every row
+    for (row = 0; row < 3; row++) {
+        // for every col
+        for (col = 0; col < 3; col++) {
+            // check if theres an empty spot
+            if (board_spots[row][col] == ' ') {
+                // if its empty, make the move
+                board_spots[row][col] == ai;
+
+                // if its the best move, choose the max value
+
+            }
+        }
+    }
+}
+
+// set the move into the board
+int move() {
+    // move is the best move, move to board_spots[row][col]
+    // change the value of that spot from " " to "o" because its an AI
+    // print the row and col of that spot in the board
 }
