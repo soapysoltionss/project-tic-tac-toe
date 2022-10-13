@@ -20,8 +20,8 @@ int row, col, depth;
 bool maxTurn;
 
 char board_spots[3][3] = {
-                         { 'o' , 'o' , 'x' }, 
-                         { 'x' , 'x' , 'o' }, 
+                         { 'o' , ' ' , 'x' }, 
+                         { 'x' , ' ' , 'o' }, 
                          { 'o' , 'o' , 'x' }
                         };
 
@@ -170,7 +170,7 @@ bool empty_spots() {
         }
     }
 
-    if (empty == 1) {
+    if (empty >= 1) {
     // if there are, then return true,
         return true;
     }
