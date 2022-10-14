@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <time.h>
 
 int main();
 int randomise_turns();
@@ -16,7 +18,7 @@ int move(); // create the move function
 // 2) Do not allow the ai to pick the spot that is not empty
 
 char player='x', ai='o', empty=' '; 
-int row, col, depth;
+int row, col, depth, rand(void);
 bool maxTurn;
 
 char board_spots[3][3] = {
@@ -33,7 +35,17 @@ int main() {
 
 // this function is to randmise between player or ai
 int randomise_turns() {
+    // randomise between 1 to 6
+    // even number is player
+    // odd number is ai
+    srand(time(NULL));
+    int rng = rand();
 
+    if (rng%2 == 0) {
+        printf("Player 1 Starts first!");
+    } else {
+        printf("AI will start first!");
+    }
 }
 
 
