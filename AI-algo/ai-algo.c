@@ -8,8 +8,6 @@ int randomise_turns();
 int board(); //create the board
 int win(); //check for rows, columns or diagonals for win
 bool empty_spots();
-int maxVal(); // create the maximiser function
-int minVal(); // create the minimiser function
 int minimax(); // create the minimax function
 int move(); // create the move function
 
@@ -19,7 +17,7 @@ int move(); // create the move function
 
 char player='x', ai='o', empty=' '; 
 int row, col, depth, rand(void);
-bool maxTurn;
+bool maxTurn; // true if it is the maximiser turn and false of its the minimiser turn
 
 char board_spots[3][3] = {
                          { 'o' , ' ' , 'x' }, 
@@ -45,10 +43,10 @@ int randomise_turns() {
     // if the result of rng % is 0, means it is an even number, assign even number to player's turn
     // odd number is ai
     if (rng%2 == 0) {
-        printf("Player 1 Starts first!");
+        printf("Player 1 Starts first! \n\n");
     } else {
         // else, if the result of rng % is not 0, means it is an odd number, assign even number to AI's turn
-        printf("AI will start first!");
+        printf("AI will start first! \n\n");
     }
 }
 
@@ -75,6 +73,7 @@ int board() {
             printf("row[%d], col[%d] = %d \n", row, col, board_spots[row][col]);
         }
     }
+    printf("\n");
     return 0;
 }
 
@@ -202,17 +201,9 @@ int minimax() {
     // testing if i can call this function if there are empty spaces to start the minimax algo
     printf("in minimax function now");
 
-    // call the max function
-    maxVal();
-
-    // call the min function
-    minVal();
-}
-
-// max() is the maximiser function
-int maxVal() {
+        if (maxTurn) {
     // create a variable called best for comparing the moves
-    int best = -100;
+    int bestSpot = -100;
     // for every row
     for (row = 0; row < 3; row++) {
         // for every col
@@ -223,16 +214,19 @@ int maxVal() {
                 board_spots[row][col] = player;
 
                 // if its the max value, choose it
+                // Call minimax recursively and choose
+                // the maximum value
+                bestSpot = max(bestSpot, minimax(board_spots, depth+1, !maxTurn) );
 
+                // Undo the move
+                board_spots[row][col] = ' ';
             }
         }
     }
-}
-
-// // min() is the minimiser function
-int minVal() {
-    // create a variable called best for comparing the moves
-    int best = 100;
+    return bestSpot;
+    } else {
+        // create a variable called best for comparing the moves
+    int bestSpot = 100;
     // for every row
     for (row = 0; row < 3; row++) {
         // for every col
@@ -243,9 +237,16 @@ int minVal() {
                 board_spots[row][col] == ai;
 
                 // if its the best move, choose the max value
+                // Call minimax recursively and choose
+                // the maximum value
+                bestSpot = min(bestSpot, minimax(board_spots, depth+1, !maxTurn) );
 
+                // Undo the move
+                board_spots[row][col] = ' ';
             }
         }
+    }
+    return bestSpot;
     }
 }
 
