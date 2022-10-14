@@ -35,15 +35,19 @@ int main() {
 
 // this function is to randmise between player or ai
 int randomise_turns() {
-    // randomise between 1 to 6
-    // even number is player
-    // odd number is ai
+    // generate a random number each time this function runs
+    // create an int called rng (random number generator) 
+
+    //generate number between diff seed where they will use the clock time as the seed
     srand(time(NULL));
     int rng = rand();
 
+    // if the result of rng % is 0, means it is an even number, assign even number to player's turn
+    // odd number is ai
     if (rng%2 == 0) {
         printf("Player 1 Starts first!");
     } else {
+        // else, if the result of rng % is not 0, means it is an odd number, assign even number to AI's turn
         printf("AI will start first!");
     }
 }
