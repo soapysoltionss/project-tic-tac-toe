@@ -2,14 +2,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
-
-int main();
-int randomise_turns();
-int board(); //create the board
-int win(); //check for rows, columns or diagonals for win
-bool empty_spots();
-int minimax(); // create the minimax function
-int move(); // create the move function
+#include <math.h>
 
 // assumptions:
 // 1) randomise players. Cannot be player or ai start first everytime
@@ -19,11 +12,22 @@ char player='x', ai='o', empty=' ';
 int row, col, depth, rand(void);
 bool maxTurn; // true if it is the maximiser turn and false of its the minimiser turn
 
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+
 char board_spots[3][3] = {
                          { 'o' , ' ' , 'x' }, 
                          { 'x' , ' ' , 'o' }, 
                          { 'o' , 'o' , 'x' }
                         };
+
+int main();
+int randomise_turns();
+int board(); //create the board
+int win(); //check for rows, columns or diagonals for win
+bool empty_spots();
+int minimax(int board_spots[row][col], int depth, bool maxTurn); // create the minimax function
+int move(); // create the move function
 
 int main() {
     randomise_turns();
@@ -153,7 +157,7 @@ int win() {
     // if empty_spots function returns true, 
     if (empty_spots() == true) {
         // run minimax algorithm
-        minimax(); 
+        minimax(board_spots[row][col], depth, maxTurn); // call the minimax function
     }
     // if empty_spots function returns false, then print this game is a tie because there are no winnners
     else {
@@ -197,13 +201,11 @@ bool empty_spots() {
 }
 
 // minimax function to run the minimax algorithm
-int minimax() {
-    // testing if i can call this function if there are empty spaces to start the minimax algo
-    printf("in minimax function now");
-
-        if (maxTurn) {
-    // create a variable called best for comparing the moves
-    int bestSpot = -100;
+int minimax(int board_spots[row][col], int depth, bool maxTurn) {
+    // if it is maximiser turn then run the code below
+    if (maxTurn) {
+    // create a variable called maxVal for comparing the values and taking the maximum value
+    float maxVal = -INFINITY;
     // for every row
     for (row = 0; row < 3; row++) {
         // for every col
@@ -211,22 +213,23 @@ int minimax() {
             // check if theres an empty spot
             if (board_spots[row][col] == ' ') {
                 // if its empty, make the move
-                board_spots[row][col] = player;
+                board_spots[row][col] = 'x';
 
                 // if its the max value, choose it
                 // Call minimax recursively and choose
                 // the maximum value
-                bestSpot = max(bestSpot, minimax(board_spots, depth+1, !maxTurn) );
+                maxVal = max(maxVal, minimax(board_spots, depth+1, !maxTurn));
 
-                // Undo the move
+                // change the spot back to ' '
                 board_spots[row][col] = ' ';
             }
         }
     }
-    return bestSpot;
+    return maxVal;
     } else {
-        // create a variable called best for comparing the moves
-    int bestSpot = 100;
+    // else if it is !maximiser turn then run the code below
+    // create a variable called minVal for comparing the values and taking the minimum value
+    float minVal = INFINITY;
     // for every row
     for (row = 0; row < 3; row++) {
         // for every col
@@ -234,19 +237,19 @@ int minimax() {
             // check if theres an empty spot
             if (board_spots[row][col] == ' ') {
                 // if its empty, make the move
-                board_spots[row][col] == ai;
+                board_spots[row][col] == 'o';
 
                 // if its the best move, choose the max value
                 // Call minimax recursively and choose
                 // the maximum value
-                bestSpot = min(bestSpot, minimax(board_spots, depth+1, !maxTurn) );
+                minVal = min(minVal, minimax(board_spots, depth+1, !maxTurn));
 
-                // Undo the move
+                // change the spot back to ' '
                 board_spots[row][col] = ' ';
             }
         }
     }
-    return bestSpot;
+    return minVal;
     }
 }
 
