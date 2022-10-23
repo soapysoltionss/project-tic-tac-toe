@@ -246,7 +246,7 @@ int minimax(char board_spots[row][col], int depth, bool maxTurn) {
                 minVal = min(minVal, minimax(board_spots, depth+1, !maxTurn));
 
                 printf("min vale at line 223 = %d", minVal);
-                
+
                 // change the spot back to ' '
                 board_spots[row][col] = ' ';
             }
@@ -255,6 +255,8 @@ int minimax(char board_spots[row][col], int depth, bool maxTurn) {
     return minVal;
     }
 }
+
+//testesttest
 
 // set the move into the board
 int move(char board_spots[row][col]) {
