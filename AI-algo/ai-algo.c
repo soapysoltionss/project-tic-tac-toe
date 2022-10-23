@@ -16,7 +16,7 @@ bool maxTurn; // true if it is the maximiser turn and false of its the minimiser
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
 char board_spots[3][3] = {
-                         { 'o' , ' ' , 'x' }, 
+                         { ' ' , ' ' , 'x' }, 
                          { 'x' , ' ' , 'o' }, 
                          { 'o' , 'o' , 'x' }
                         };
@@ -26,7 +26,7 @@ int randomise_turns();
 int board(); //create the board
 int win(); //check for rows, columns or diagonals for win
 bool empty_spots();
-int minimax(int board_spots[row][col], int depth, bool maxTurn); // create the minimax function
+int minimax(char board_spots[row][col], int depth, bool maxTurn); // create the minimax function
 int move(); // create the move function
 
 int main() {
@@ -157,7 +157,7 @@ int win() {
     // if empty_spots function returns true, 
     if (empty_spots() == true) {
         // run minimax algorithm
-        minimax(board_spots[row][col], depth, maxTurn); // call the minimax function
+        minimax(board_spots, depth, maxTurn); // call the minimax function
     }
     // if empty_spots function returns false, then print this game is a tie because there are no winnners
     else {
@@ -201,7 +201,7 @@ bool empty_spots() {
 }
 
 // minimax function to run the minimax algorithm
-int minimax(int board_spots[row][col], int depth, bool maxTurn) {
+int minimax(char board_spots[row][col], int depth, bool maxTurn) {
     // if it is maximiser turn then run the code below
     if (maxTurn) {
     // create a variable called maxVal for comparing the values and taking the maximum value
@@ -220,6 +220,7 @@ int minimax(int board_spots[row][col], int depth, bool maxTurn) {
                 // the maximum value
                 maxVal = max(maxVal, minimax(board_spots, depth+1, !maxTurn));
 
+                printf("max vale at line 223 = %d", maxVal);
                 // change the spot back to ' '
                 board_spots[row][col] = ' ';
             }
@@ -244,6 +245,8 @@ int minimax(int board_spots[row][col], int depth, bool maxTurn) {
                 // the maximum value
                 minVal = min(minVal, minimax(board_spots, depth+1, !maxTurn));
 
+                printf("min vale at line 223 = %d", minVal);
+                
                 // change the spot back to ' '
                 board_spots[row][col] = ' ';
             }
@@ -254,8 +257,35 @@ int minimax(int board_spots[row][col], int depth, bool maxTurn) {
 }
 
 // set the move into the board
-int move() {
-    // move is the best move, move to board_spots[row][col]
-    // change the value of that spot from " " to "o" because its an AI
-    // print the row and col of that spot in the board
+int move(char board_spots[row][col]) {
+    float oldBestMove = -INFINITY;
+    int newBestMove = 0;
+    int new_row = -1;
+    int new_col = -1;
+
+    // check for all empty spots, run the minimax function
+    for (row = 0; row < 2; row++) {
+        for (col = 0; col < 2; col++) {
+            if (board_spots[row][col] == ' ') {
+                
+                // change the value of that spot from " " to "o" because its an AI
+                board_spots[row][col] == ai;
+
+                // run the minimax function
+                int bestMove = minimax(board_spots, 0 , false);
+
+                board_spots[row][col] == ' ';
+
+                // move is the best move, move to board_spots[row][col]
+                if (bestMove > oldBestMove) {
+                    new_row = row;
+                    printf("The row of the best move is: %d", new_row);
+                    new_col = col;
+                    printf("The column of the best move is: %d", new_col);
+                    newBestMove = bestMove;
+                    printf("The value is %d", newBestMove);
+                }
+            }
+        }
+    }
 }
