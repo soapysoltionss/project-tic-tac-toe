@@ -15,6 +15,8 @@ bool maxTurn; // true if it is the maximiser turn and false of its the minimiser
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
+//test
+
 int main();
 int randomise_turns();
 int board(); //create the board
