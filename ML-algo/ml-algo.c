@@ -2,22 +2,22 @@
 #include <stdlib.h>
 
 int main(){
-    FILE *fp;
+    FILE *ptr_readFile;
     char con[1000000];
     
 // Create file pointers
-    fp = fopen("dataset/tic-tac-toe.data", "r");
+    ptr_readFile = fopen("dataset/tic-tac-toe.data", "r");
 
-    if (!fp){
+    if (!ptr_readFile){
         perror("File Opening Failed");
         return EXIT_FAILURE;
     }
-    while(fgets (con, 1000000, fp) != NULL) {
+    while(fgets (con, 1000000, ptr_readFile) != NULL) {
 
         printf("%s", con);
     }
     
-    fclose(fp);
+    fclose(ptr_readFile);
 
     return EXIT_SUCCESS;
     
