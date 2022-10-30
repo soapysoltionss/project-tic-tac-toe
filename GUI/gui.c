@@ -1,4 +1,7 @@
 #include <stdio.h>
+<<<<<<< HEAD
+
+=======
 #include <gtk/gtk.h>
 
 static char board[3][3] = {{' ',' ',' '},{' ',' ',' '},{' ',' ',' '}};
@@ -251,3 +254,4 @@ static void print_credits(GtkWidget *widget, gpointer data){
     g_signal_connect (dialog, "response", G_CALLBACK (gtk_window_destroy), NULL);
     gtk_widget_show (dialog);
 }
+>>>>>>> e204dbe57f1f2dc22baa58ef6721985377e368c6
