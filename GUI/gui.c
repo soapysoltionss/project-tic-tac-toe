@@ -89,22 +89,14 @@ static void activate (GtkApplication *app, gpointer data){
     
     //https://stackoverflow.com/questions/16630528/trying-to-populate-a-gtkcombobox-with-model-in-c
     //https://github.com/steshaw/gtk-examples/blob/master/ch05.menu/combobox.c
-    GList *boxitems = NULL;
+    //GList *boxitems = NULL;
     GtkWidget *combo;
     char item;
 
-    /*create list of items*/
-    boxitems = g_list_append(boxitems, "A");
-    boxitems = g_list_append(boxitems, "B");
-    boxitems = g_list_append(boxitems, "C");
-
-    combo = gtk_combo_box_new();
-    //gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, "A");
-    //gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, "B");
-    //gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, "C");
-
-    /*create dropdown portion*/
-    //gtk_combo_set_popdown_strings(GTK_COMBO(combo, boxitems));
+    combo = gtk_combo_box_text_new();
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, "A");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, "B");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, "C");
 
     gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 1);
     g_signal_connect(combo, "clicked", G_CALLBACK(print_home_button),NULL);
