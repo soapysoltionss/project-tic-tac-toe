@@ -1,16 +1,27 @@
 #include <stdio.h>
+#include <string.h>
 #include <gtk/gtk.h>
 
 static char board[3][3] = {{' ',' ',' '},{' ',' ',' '},{' ',' ',' '}};
 static char tile[2] = " \0";
 static int currentMode = 0; //0->2P mode, 1->AI mode...
 
+/*
 const char mode[4][25]={"2-Player Mode",
                         "1-Player Mode (AI)",
                         "1-Player Mode (ML-ez)",
                         "1-Player Mode (ML-hard)"};
+*/
+const char mode[4][25]={"2-Player Mode",
+                        "AI-Bot Mode",
+                        "Easy-Bot Mode",
+                        "Hard-Bot Mode"};
+
 const char PLAYER[2] = {'X','O'};
+char playerName[2][15] = {"Player 1","Player 2"};
 int turn = 0; //for turn counter (reset on board reset) + turn%2 = player
+
+static int x_win, o_win, ai_win, easy_win, hard_win;
 
 
 void printBoard();
@@ -21,7 +32,7 @@ void updateBoard(int x, int y,GtkWidget *widget, gpointer button);
 
 static void activate (GtkApplication *app, gpointer data);
 static void print_home_button(GtkWidget *widget, gpointer data);
-static void one_p_mode(GtkWidget *widget, gpointer data);
+static void two_p_mode(GtkWidget *widget, gpointer data);
 static void ai_mode(GtkWidget *widget, gpointer data);
 static void ml_ez_mode(GtkWidget *widget, gpointer data);
 static void ml_hard_mode(GtkWidget *widget, gpointer data);
@@ -39,7 +50,8 @@ static void disableTTT();
 static void enableTTT();
 
 static GtkWidget *b00,*b01,*b02,*b10,*b11,*b12,*b20,*b21,*b22;
-static GtkWidget *cMode;
+static GtkWidget *two_p, *ai, *ml_easy, *ml_hard;
+static GtkWidget *xScore,*oScore,*aiScore,*easyScore,*hardScore;
 
 int main(int argc, char **argv){
     GtkApplication *app;
@@ -145,7 +157,6 @@ bool win(){
     // check for diagonal wins
     // check if box 0, 4, 8 OR box 3, 4, 6 are the same
     // box 0 = [0][0], box 4 = [1][1] , box 8 = [2][2], box 3 = [1][0], box 4 = [1][1], box 6 = [2][0]
-
     // check for diagonal win in "\" slope
     if (board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
             if (board[0][0] == 'X') {
@@ -182,7 +193,7 @@ bool win(){
 static void activate (GtkApplication *app, gpointer data){
     GtkWidget *window;
     GtkWidget *grid;
-    GtkWidget *menu, *quit, *credits, *msgButton;
+    GtkWidget *menu, *quit, *credits, *resetButton, *txtButton;
     //GtkWidget *b00,*b01,*b02,*b10,*b11,*b12,*b20,*b21,*b22;
 
     window = gtk_application_window_new(app);
@@ -191,6 +202,13 @@ static void activate (GtkApplication *app, gpointer data){
     grid = gtk_grid_new();
     gtk_window_set_child(GTK_WINDOW(window),grid);
 
+
+    txtButton = gtk_button_new_with_label("TIC-TAC-TOE");
+    gtk_widget_set_sensitive(txtButton, FALSE);
+    gtk_grid_attach(GTK_GRID(grid), txtButton, 0,0,14,1);
+    txtButton = gtk_button_new_with_label("SETTING");
+    //g_signal_connect(msgButton, "clicked", G_CALLBACK(print_home_button),NULL);
+    gtk_grid_attach(GTK_GRID(grid), txtButton, 14,0,2,1);
 
 
     //https://stackoverflow.com/questions/16630528/trying-to-populate-a-gtkcombobox-with-model-in-c
@@ -206,84 +224,105 @@ static void activate (GtkApplication *app, gpointer data){
 
     gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 1);
     g_signal_connect(combo, "clicked", G_CALLBACK(print_home_button),NULL);
-    gtk_grid_attach(GTK_GRID(grid), combo, 0,0,1,1);
-        
-    /*
-    menu = gtk_button_new_with_label(mode[0]);
-    g_signal_connect(menu, "clicked", G_CALLBACK(one_p_mode),NULL);
-    gtk_grid_attach(GTK_GRID(grid), menu, 0,0,4,1);
-    menu = gtk_button_new_with_label(mode[1]);
-    g_signal_connect(menu, "clicked", G_CALLBACK(ai_mode),NULL);
-    gtk_grid_attach(GTK_GRID(grid), menu, 4,0,4,1);
-    menu = gtk_button_new_with_label(mode[2]);
-    g_signal_connect(menu, "clicked", G_CALLBACK(ml_ez_mode),NULL);
-    gtk_grid_attach(GTK_GRID(grid), menu, 8,0,4,1);
-    menu = gtk_button_new_with_label(mode[3]);
-    g_signal_connect(menu, "clicked", G_CALLBACK(ml_hard_mode),NULL);
-    gtk_grid_attach(GTK_GRID(grid), menu, 12,0,4,1);
+    gtk_grid_attach(GTK_GRID(grid), combo, 0,1,16,1);
+/*
+    two_p = gtk_button_new_with_label(mode[0]);
+    g_signal_connect(two_p, "clicked", G_CALLBACK(two_p_mode),NULL);
+    gtk_grid_attach(GTK_GRID(grid), two_p, 0,1,4,1);
+    gtk_widget_set_sensitive(two_p, FALSE); //selected by default
+    ai = gtk_button_new_with_label(mode[1]);
+    g_signal_connect(ai, "clicked", G_CALLBACK(ai_mode),NULL);
+    gtk_grid_attach(GTK_GRID(grid), ai, 4,1,4,1);
+    ml_easy = gtk_button_new_with_label(mode[2]);
+    g_signal_connect(ml_easy, "clicked", G_CALLBACK(ml_ez_mode),NULL);
+    gtk_grid_attach(GTK_GRID(grid), ml_easy, 8,1,4,1);
+    ml_hard = gtk_button_new_with_label(mode[3]);
+    g_signal_connect(ml_hard, "clicked", G_CALLBACK(ml_hard_mode),NULL);
+    gtk_grid_attach(GTK_GRID(grid), ml_hard, 12,1,4,1);
+*/
 
-    msgButton = gtk_button_new_with_label("Selected Mode: ");
-    gtk_widget_set_sensitive(msgButton, FALSE);
-    gtk_grid_attach(GTK_GRID(grid), msgButton, 0,1,4,1);
-    cMode = gtk_button_new_with_label(mode[currentMode]);
-    gtk_widget_set_sensitive(cMode, FALSE);
-    gtk_grid_attach(GTK_GRID(grid), cMode, 0,2,4,1);
-    */
+    char str_int[5];
+    char currentPlayer[15];
+    strcpy(currentPlayer, playerName[0]);
+    xScore = gtk_button_new_with_label(strcat(strcat(currentPlayer,": "),itoa(x_win,str_int,10)));
+    gtk_widget_set_sensitive(xScore, FALSE);
+    gtk_grid_attach(GTK_GRID(grid), xScore, 0,2,2,1);
+    strcpy(currentPlayer, playerName[1]);
+    oScore = gtk_button_new_with_label(strcat(strcat(currentPlayer,": "),itoa(o_win,str_int,10)));
+    gtk_widget_set_sensitive(oScore, FALSE);
+    gtk_grid_attach(GTK_GRID(grid), oScore, 2,2,2,1);
+    strcpy(currentPlayer, "AI");
+    aiScore = gtk_button_new_with_label(strcat(strcat(currentPlayer,": "),itoa(ai_win,str_int,10)));
+    gtk_widget_set_sensitive(aiScore, FALSE);
+    gtk_grid_attach(GTK_GRID(grid), aiScore, 4,2,4,1);
+    strcpy(currentPlayer, "Easy-Bot");
+    easyScore = gtk_button_new_with_label(strcat(strcat(currentPlayer,": "),itoa(easy_win,str_int,10)));
+    gtk_widget_set_sensitive(easyScore, FALSE);
+    gtk_grid_attach(GTK_GRID(grid), easyScore, 8,2,4,1);
+    strcpy(currentPlayer, "Hard-Bot");
+    hardScore = gtk_button_new_with_label(strcat(strcat(currentPlayer,": "),itoa(hard_win,str_int,10)));
+    gtk_widget_set_sensitive(hardScore, FALSE);
+    gtk_grid_attach(GTK_GRID(grid), hardScore, 12,2,4,1);
+
 
     quit = gtk_button_new_with_label("Quit");
     g_signal_connect_swapped (quit, "clicked", G_CALLBACK (gtk_window_destroy), window);
-    gtk_grid_attach(GTK_GRID(grid), quit, 0,6,1,1);
+    gtk_grid_attach(GTK_GRID(grid), quit, 0,7,1,1);
     
     credits = gtk_button_new_with_label("Credits");
     g_signal_connect_swapped (credits, "clicked", G_CALLBACK (print_credits), window);
-    gtk_grid_attach(GTK_GRID(grid), credits, 13,6,1,1);
+    gtk_grid_attach(GTK_GRID(grid), credits, 15,7,1,1);
+
+    resetButton = gtk_button_new_with_label("RESET");
+    g_signal_connect_swapped(resetButton,"clicked",G_CALLBACK(resetBoard),NULL);
+    gtk_grid_attach(GTK_GRID(grid),resetButton,15,3,1,1);
 
     printBoard(board);
     tile[0] = board[0][0];
     b00 = gtk_button_new_with_label(tile);
     g_signal_connect_swapped(b00,"clicked",G_CALLBACK(button00),NULL);
-    gtk_grid_attach(GTK_GRID(grid),b00,4,3,1,1);
+    gtk_grid_attach(GTK_GRID(grid),b00,4,4,1,1);
 
     tile[0] = board[0][1];
     b01 = gtk_button_new_with_label(tile);
     g_signal_connect_swapped(b01,"clicked",G_CALLBACK(button01),NULL);
-    gtk_grid_attach(GTK_GRID(grid),b01,5,3,1,1);
+    gtk_grid_attach(GTK_GRID(grid),b01,5,4,1,1);
 
 
     tile[0] = board[0][2];
     b02 = gtk_button_new_with_label(tile);
     g_signal_connect_swapped(b02,"clicked",G_CALLBACK(button02),NULL);
-    gtk_grid_attach(GTK_GRID(grid),b02,6,3,1,1);
+    gtk_grid_attach(GTK_GRID(grid),b02,6,4,1,1);
 
     tile[0] = board[1][0];
     b10 = gtk_button_new_with_label(tile);
     g_signal_connect_swapped(b10,"clicked",G_CALLBACK(button10),NULL);
-    gtk_grid_attach(GTK_GRID(grid),b10,4,4,1,1);
+    gtk_grid_attach(GTK_GRID(grid),b10,4,5,1,1);
 
     tile[0] = board[1][1];
     b11 = gtk_button_new_with_label(tile);
     g_signal_connect_swapped(b11,"clicked",G_CALLBACK(button11),NULL);
-    gtk_grid_attach(GTK_GRID(grid),b11,5,4,1,1);
+    gtk_grid_attach(GTK_GRID(grid),b11,5,5,1,1);
 
     tile[0] = board[1][2];
     b12 = gtk_button_new_with_label(tile);
     g_signal_connect_swapped(b12,"clicked",G_CALLBACK(button12),NULL);
-    gtk_grid_attach(GTK_GRID(grid),b12,6,4,1,1);
+    gtk_grid_attach(GTK_GRID(grid),b12,6,5,1,1);
 
     tile[0] = board[2][0];
     b20 = gtk_button_new_with_label(tile);
     g_signal_connect_swapped(b20,"clicked",G_CALLBACK(button20),NULL);
-    gtk_grid_attach(GTK_GRID(grid),b20,4,5,1,1);
+    gtk_grid_attach(GTK_GRID(grid),b20,4,6,1,1);
 
     tile[0] = board[2][1];
     b21 = gtk_button_new_with_label(tile);
     g_signal_connect_swapped(b21,"clicked",G_CALLBACK(button21),NULL);
-    gtk_grid_attach(GTK_GRID(grid),b21,5,5,1,1);
+    gtk_grid_attach(GTK_GRID(grid),b21,5,6,1,1);
 
     tile[0] = board[2][2];
     b22 = gtk_button_new_with_label(tile);
     g_signal_connect_swapped(b22,"clicked",G_CALLBACK(button22),NULL);
-    gtk_grid_attach(GTK_GRID(grid),b22,6,5,1,1);
+    gtk_grid_attach(GTK_GRID(grid),b22,6,6,1,1);
 
 
 
@@ -358,16 +397,35 @@ void updateBoard(int x, int y,GtkWidget *widget, gpointer button){
                                         GTK_DIALOG_DESTROY_WITH_PARENT,
                                         GTK_MESSAGE_INFO,
                                         GTK_BUTTONS_OK,
-                                        "WINNER: Player %c !",PLAYER[(turn-1)%2]);
+                                        "WINNER: %s !",playerName[(turn-1)%2]);
         gtk_window_set_title(GTK_WINDOW(winDialog), "PM Tic-Tac-Toe Project");
         //gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (winDialog),"message");
         g_signal_connect (winDialog, "response", G_CALLBACK (gtk_window_destroy), NULL);
         gtk_widget_show (winDialog);
 
+        //add win
+        if ((turn-1)%2==0){
+            x_win+=1;
+            change_button = (GtkButton *) xScore;
+            char str_int[5];
+            char currentPlayer[15];
+            strcpy(currentPlayer, playerName[0]);
+            gtk_button_set_label (change_button, (strcat(strcat(currentPlayer,": "),itoa(x_win,str_int,10))));
+        }
+        else if ((turn-1)%2==1){
+            o_win+=1;
+            change_button = (GtkButton *) oScore;
+            char str_int[5];
+            char currentPlayer[15];
+            strcpy(currentPlayer, playerName[1]);
+            gtk_button_set_label (change_button,(strcat(strcat(currentPlayer,": "),itoa(o_win,str_int,10))));
+        }
+        
+
         disableTTT();
     }
 
-    //if mode is not 2P
+    //if mode is not 2P ----> need to do checkwin and checkdraw again
     if (currentMode!=0){
         if (currentMode==1){
             //GET COORD FROM AI.h
@@ -385,29 +443,33 @@ void updateBoard(int x, int y,GtkWidget *widget, gpointer button){
     }
 }
 
-static void one_p_mode(GtkWidget *widget, gpointer data){
+static void two_p_mode(GtkWidget *widget, gpointer data){
     resetBoard();
-    currentMode = 0;
-    GtkButton *change_button = (GtkButton *) cMode;
-    gtk_button_set_label (change_button, mode[currentMode]);
+    gtk_widget_set_sensitive(two_p, FALSE);
+    gtk_widget_set_sensitive(ai, TRUE);
+    gtk_widget_set_sensitive(ml_easy, TRUE);
+    gtk_widget_set_sensitive(ml_hard, TRUE);
 }
 static void ai_mode(GtkWidget *widget, gpointer data){
     resetBoard();
-    currentMode = 1;
-    GtkButton *change_button = (GtkButton *) cMode;
-    gtk_button_set_label (change_button, mode[currentMode]);
+    gtk_widget_set_sensitive(two_p, TRUE);
+    gtk_widget_set_sensitive(ai, FALSE);
+    gtk_widget_set_sensitive(ml_easy, TRUE);
+    gtk_widget_set_sensitive(ml_hard, TRUE);
 }
 static void ml_ez_mode(GtkWidget *widget, gpointer data){
     resetBoard();
-    currentMode = 2;
-    GtkButton *change_button = (GtkButton *) cMode;
-    gtk_button_set_label (change_button, mode[currentMode]);
+    gtk_widget_set_sensitive(two_p, TRUE);
+    gtk_widget_set_sensitive(ai, TRUE);
+    gtk_widget_set_sensitive(ml_easy, FALSE);
+    gtk_widget_set_sensitive(ml_hard, TRUE);
 }
 static void ml_hard_mode(GtkWidget *widget, gpointer data){
     resetBoard();
-    currentMode = 3;
-    GtkButton *change_button = (GtkButton *) cMode;
-    gtk_button_set_label (change_button, mode[currentMode]);
+    gtk_widget_set_sensitive(two_p, TRUE);
+    gtk_widget_set_sensitive(ai, TRUE);
+    gtk_widget_set_sensitive(ml_easy, TRUE);
+    gtk_widget_set_sensitive(ml_hard, FALSE);
 }
 
 static void button00(GtkWidget *widget, gpointer data){
@@ -448,8 +510,7 @@ static void print_credits(GtkWidget *widget, gpointer data){
                                     GTK_BUTTONS_OK,
                                     "Done By:");
     gtk_window_set_title(GTK_WINDOW(dialog), "PM Tic-Tac-Toe Project");
-    gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),"Ben\nppl\n");
+    gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),"GROUP 5:\n[2202122]\tLIEW JING DE BENJAMIN\n[2200754]\tJAVIER NG WEI CHENG\n[2201291]\tNEAM HENG CHONG, TIMOTHY\n[2203393]\tTAN JIA WEN\n[2202666]\tCHER GEK TENG");
     g_signal_connect (dialog, "response", G_CALLBACK (gtk_window_destroy), NULL);
     gtk_widget_show (dialog);
 }
->>>>>>> e204dbe57f1f2dc22baa58ef6721985377e368c6
