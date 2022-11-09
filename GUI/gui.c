@@ -220,16 +220,16 @@ static void activate (GtkApplication *app, gpointer data){
     combo = gtk_combo_box_text_new();
     /*2 player mode*/
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, mode[0]);
-    g_signal_connect(menu, "clicked", G_CALLBACK(one_p_mode), NULL);
+    g_signal_connect(two_p, "clicked", G_CALLBACK(two_p_mode), NULL);
     /*1 player - ai mode*/
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, mode[1]);
-    g_signal_connect(menu, "clicked", G_CALLBACK(ai_mode), NULL);
+    g_signal_connect(ai, "clicked", G_CALLBACK(ai_mode), NULL);
     /*1 player - ml easy mode*/
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, mode[2]);
-    g_signal_connect(menu, "clicked", G_CALLBACK(ml_ez_mode), NULL);
+    g_signal_connect(ml_easy, "clicked", G_CALLBACK(ml_ez_mode), NULL);
     /*1 player - ml hard mode*/
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, mode[3]);
-    g_signal_connect(menu, "clicked", G_CALLBACK(ml_hard_mode), NULL);
+    g_signal_connect(ml_hard, "clicked", G_CALLBACK(ml_hard_mode), NULL);
 
     gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 1);
     g_signal_connect(combo, "clicked", G_CALLBACK(print_home_button),NULL);
