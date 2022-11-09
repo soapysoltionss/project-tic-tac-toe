@@ -191,8 +191,6 @@ static void activate (GtkApplication *app, gpointer data){
     grid = gtk_grid_new();
     gtk_window_set_child(GTK_WINDOW(window),grid);
 
-
-
     //https://stackoverflow.com/questions/16630528/trying-to-populate-a-gtkcombobox-with-model-in-c
     //https://github.com/steshaw/gtk-examples/blob/master/ch05.menu/combobox.c
     //GList *boxitems = NULL;
@@ -200,9 +198,18 @@ static void activate (GtkApplication *app, gpointer data){
     char item;
 
     combo = gtk_combo_box_text_new();
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, "A");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, "B");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, "C");
+    /*2 player mode*/
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, mode[0]);
+    g_signal_connect(menu, "clicked", G_CALLBACK(one_p_mode), NULL);
+    /*1 player - ai mode*/
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, mode[1]);
+    g_signal_connect(menu, "clicked", G_CALLBACK(ai_mode), NULL);
+    /*1 player - ml easy mode*/
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, mode[2]);
+    g_signal_connect(menu, "clicked", G_CALLBACK(ml_ez_mode), NULL);
+    /*1 player - ml hard mode*/
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, mode[3]);
+    g_signal_connect(menu, "clicked", G_CALLBACK(ml_hard_mode), NULL);
 
     gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 1);
     g_signal_connect(combo, "clicked", G_CALLBACK(print_home_button),NULL);
