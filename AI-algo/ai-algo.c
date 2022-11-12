@@ -8,14 +8,12 @@
 // 1) randomise players. Cannot be player or ai start first everytime
 // 2) Do not allow the ai to pick the spot that is not empty
 
-char player='x', ai='o', empty=' '; 
+char player='x', opponent='o', empty=' '; 
 int row = 3, col = 3, depth, rand(void);
 bool maxTurn; // true if it is the maximiser turn and false of its the minimiser turn
 
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #define max(a, b) (((a) > (b)) ? (a) : (b))
-
-//test
 
 int main();
 int randomise_turns();
@@ -27,9 +25,9 @@ int move(); // create the move function
 
 int main() {
     char board_spots[3][3] = {
-                         { ' ' , ' ' , 'o' }, 
-                         { 'x' , ' ' , 'x' }, 
-                         { 'o' , ' ' , 'x' }
+                         { 'x' , 'o' , 'x' }, 
+                         { 'o' , 'o' , 'x' }, 
+                         { ' ' , ' ' , ' ' }
                         };
     randomise_turns();
     board(board_spots);
@@ -37,6 +35,8 @@ int main() {
     empty_spots(board_spots);
     minimax(board_spots, depth, maxTurn);
     move(board_spots);
+
+    return 0;
 }
 
 // this function is to randmise between player or ai
@@ -65,9 +65,9 @@ int board(char board_spots[row][col]) {
     // declare row and col as 0 because array starts from 0
     // declare array and the size and put the number in the array
     //loop for row
-    for (row = 0; row < 3; ++row) {
+    for (row = 0; row < 3; row++) {
         //loop for col
-        for (col = 0; col < 3; ++col) {
+        for (col = 0; col < 3; col++) {
             //for each row, col print the number in the box for eg
 
             //         Col0    Col1    Col2
@@ -77,7 +77,6 @@ int board(char board_spots[row][col]) {
             //        _Box3_|__Box4__|_Box5_
             // Row2   2 , 0 | 2 , 1  | 2 , 2
             //         Box6 |  Box7  | Box8
-
             printf("row[%d], col[%d] = %d \n", row, col, board_spots[row][col]);
         }
     }
@@ -93,7 +92,7 @@ int win(char board_spots[3][3]) {
     // if they are they same, then check char,
     // check if player or AI won
     // esle if column are not the same, return 0
-    for (row = 0; row < 3; ++row) {
+    for (row = 0; row < 3; row++) {
         if (board_spots[row][0] == board_spots[row][1] 
         && board_spots[row][1] == board_spots[row][2]) {
             if (board_spots[row][0] == 'x') {
@@ -116,7 +115,7 @@ int win(char board_spots[3][3]) {
     // if they are they same, then check char,
     // check if player or AI won
     // esle if row are not the same, return 0
-    for (col = 0; col < 3; ++col) {
+    for (col = 0; col < 3; col++) {
         if (board_spots[0][col] == board_spots[1][col] 
         && board_spots[1][col] == board_spots[2][col]) {
             if (board_spots[0][col] == 'x') {
@@ -175,6 +174,7 @@ int win(char board_spots[3][3]) {
     else {
         printf("This game is a Tie!");   
     }
+    return 0;
 }
 
 bool empty_spots(char board_spots[3][3]) {
@@ -187,8 +187,8 @@ bool empty_spots(char board_spots[3][3]) {
     // add a variable for non empty spot and set it to 0
     int not_empty = 0;
 
-    for (row = 0; row < 3; ++row) {
-        for (col = 0; col < 3; ++col) {
+    for (row = 0; row < 3; row++) {
+        for (col = 0; col < 3; col++) {
             if (board_spots[row][col] == ' ') {
             // if there are, then add 1 to empty
                 empty += 1;
@@ -215,67 +215,67 @@ int minimax(char board_spots[3][3], int depth, bool maxTurn) {
 
     int val = win(board_spots);
  
-    // If Maximizer has won the game return his/her
-    // evaluated score
+    // If Maximizer has won the game return his/her score
     if (val == 10)
         return val;
  
-    // If Minimizer has won the game return his/her
-    // evaluated score
+    // If Minimizer has won the game return his/her score
     if (val == -10)
         return val;
+
+    if (depth == 0) {
+        return val;
+    }
     
     // if it is maximiser turn then run the code below
     if (maxTurn) {
-    // create a variable called maxVal for comparing the values and taking the maximum value
-    float maxVal = -INFINITY;
-    // for every row
-    for (row = 0; row < 3; row++) {
-        // for every col
-        for (col = 0; col < 3; col++) {
-            // check if theres an empty spot
-            if (board_spots[row][col] == ' ') {
-                // if its empty, make the move
-                board_spots[row][col] = 'o';
+        // create a variable called maxVal for comparing the values and taking the maximum value
+        float best = -INFINITY;
+        // for every row
+        for (row = 0; row < 3; row++) {
+            // for every col
+            for (col = 0; col < 3; col++) {
+                // check if theres an empty spot
+                if (board_spots[row][col] == ' ') {
+                    // if its empty, make the move
+                    board_spots[row][col] = player;
 
-                // if its the max value, choose it
-                // Call minimax recursively and choose
-                // the maximum value
-                maxVal = max(maxVal, minimax(board_spots, depth-1, !maxTurn));
+                    // if its the max value, choose it
+                    // Call minimax recursively and choose
+                    // the maximum value
+                    best = max(best, minimax(board_spots, depth+1, !maxTurn));
 
-                printf("max vale at line 223 = %d \n", maxVal);
-                // change the spot back to ' '
-                board_spots[row][col] = ' ';
+                    // change the spot back to ' '
+                    board_spots[row][col] = ' ';
+                }
             }
         }
-    }
-    return maxVal;
-    } else {
-    // else if it is !maximiser turn then run the code below
-    // create a variable called minVal for comparing the values and taking the minimum value
-    float minVal = INFINITY;
-    // for every row
-    for (row = 0; row < 3; row++) {
-        // for every col
-        for (col = 0; col < 3; col++) {
-            // check if theres an empty spot
-            if (board_spots[row][col] == ' ') {
-                // if its empty, make the move
-                board_spots[row][col] == 'o';
+        return best;
+    } 
+    else {
+        // else if it is !maximiser turn then run the code below
+        // create a variable called minVal for comparing the values and taking the minimum value
+        float best = INFINITY;
+        // for every row
+        for (row = 0; row < 3; row++) {
+            // for every col
+            for (col = 0; col < 3; col++) {
+                // check if theres an empty spot
+                if (board_spots[row][col] == ' ') {
+                    // if its empty, make the move
+                    board_spots[row][col] = opponent;
 
-                // if its the best move, choose the max value
-                // Call minimax recursively and choose
-                // the maximum value
-                minVal = min(minVal, minimax(board_spots, depth-1, !maxTurn));
+                    // if its the best move, choose the max value
+                    // Call minimax recursively and choose
+                    // the maximum value
+                    best = min(best, minimax(board_spots, depth+1, !maxTurn));
 
-                printf("min vale at line 248 = %d \n", minVal);
-
-                // change the spot back to ' '
-                board_spots[row][col] = ' ';
+                    // change the spot back to ' '
+                    board_spots[row][col] = ' ';
+                }
             }
         }
-    }
-    return minVal;
+        return best;
     }
 }
 
@@ -294,8 +294,8 @@ int move(char board_spots[3][3]) {
         for (col = 0; col < 3; col++) {
             if (board_spots[row][col] == ' ') {
                 
-                // change the value of that spot from " " to "o" because its an AI
-                board_spots[row][col] == 'o';
+                // change the value of that spot from " " to "x" because its the player
+                board_spots[row][col] = player;
 
                 // run the minimax function
                 int bestMove = minimax(board_spots, depth, false);
