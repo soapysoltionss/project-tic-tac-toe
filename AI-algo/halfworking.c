@@ -14,7 +14,26 @@ struct Move
 	int row, col;
 };
 
-char player = 'x', opponent = 'o';
+char player = 'X', opponent = 'O';
+
+// this function is to randmise between player or ai
+int randomise_turns() {
+    // generate a random number each time this function runs
+    // create an int called rng (random number generator) 
+
+    //generate number between diff seed where they will use the clock time as the seed
+    srand(time(NULL));
+    int rng = rand();
+
+    // if the result of rng % is 0, means it is an even number, assign even number to player's turn
+    // odd number is ai
+    if (rng%2 == 0) {
+        printf("Player 1 Starts first! \n\n");
+    } else {
+        // else, if the result of rng % is not 0, means it is an odd number, assign even number to AI's turn
+        printf("AI will start first! \n\n");
+    }
+}
 
 // This function returns true if there are moves
 // remaining on the board. It returns false if
@@ -23,7 +42,7 @@ bool isMovesLeft(char board[3][3])
 {
 	for (int i = 0; i<3; i++)
 		for (int j = 0; j<3; j++)
-			if (board[i][j]=='_')
+			if (board[i][j]==' ')
 				return true;
 	return false;
 }
@@ -113,7 +132,7 @@ int minimax(char board[3][3], int depth, bool isMax)
 			for (int j = 0; j<3; j++)
 			{
 				// Check if cell is empty
-				if (board[i][j]=='_')
+				if (board[i][j]==' ')
 				{
 					// Make the move
 					board[i][j] = player;
@@ -124,7 +143,7 @@ int minimax(char board[3][3], int depth, bool isMax)
 						minimax(board, depth+1, !isMax) );
 
 					// Undo the move
-					board[i][j] = '_';
+					board[i][j] = ' ';
 				}
 			}
 		}
@@ -142,7 +161,7 @@ int minimax(char board[3][3], int depth, bool isMax)
 			for (int j = 0; j<3; j++)
 			{
 				// Check if cell is empty
-				if (board[i][j]=='_')
+				if (board[i][j]==' ')
 				{
 					// Make the move
 					board[i][j] = opponent;
@@ -153,7 +172,7 @@ int minimax(char board[3][3], int depth, bool isMax)
 						minimax(board, depth+1, !isMax));
 
 					// Undo the move
-					board[i][j] = '_';
+					board[i][j] = ' ';
 				}
 			}
 		}
@@ -177,7 +196,7 @@ struct Move findBestMove(char board[3][3])
 		for (int j = 0; j<3; j++)
 		{
 			// Check if cell is empty
-			if (board[i][j]=='_')
+			if (board[i][j]==' ')
 			{
 				// Make the move
 				board[i][j] = player;
@@ -187,7 +206,7 @@ struct Move findBestMove(char board[3][3])
 				int moveVal = minimax(board, 0, false);
 
 				// Undo the move
-				board[i][j] = '_';
+				board[i][j] = ' ';
 
 				// If the value of the current move is
 				// more than the best value, then update
@@ -213,15 +232,14 @@ int main()
 {
 	char board[3][3] =
 	{
-		{ 'x', '_', 'x' },
-		{ 'x', '_', 'o' },
-		{ 'o', '_', 'o' }
+		{ 'X', ' ', ' ' },
+		{ ' ', ' ', ' ' },
+		{ 'O', ' ', 'O' }
 	};
 
 	struct Move bestMove = findBestMove(board);
 
 	printf("The Optimal Move is :\n");
-	printf("ROW: %d COL: %d\n\n", bestMove.row,
-								bestMove.col );
+	printf("ROW: %d COL: %d\n\n", bestMove.row, bestMove.col );
 	return 0;
 }
