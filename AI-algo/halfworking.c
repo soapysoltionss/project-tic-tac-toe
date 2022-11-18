@@ -120,7 +120,7 @@ int minimax(char board[3][3], int depth, bool isMax)
 
 					// Call minimax recursively and choose
 					// the maximum value
-					best = max( best, minimax(board, depth+1, !isMax) );
+					best = max(best, minimax(board, depth+1, !isMax) );
 
 					// Undo the move
 					board[i][j] = ' ';
