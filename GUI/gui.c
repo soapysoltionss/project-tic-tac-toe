@@ -234,6 +234,7 @@ static void activate (GtkApplication *app, gpointer data){
     gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 1);
     g_signal_connect(combo, "clicked", G_CALLBACK(print_home_button),NULL);
     gtk_grid_attach(GTK_GRID(grid), combo, 0,1,16,1);
+    
 /*
     two_p = gtk_button_new_with_label(mode[0]);
     g_signal_connect(two_p, "clicked", G_CALLBACK(two_p_mode),NULL);
