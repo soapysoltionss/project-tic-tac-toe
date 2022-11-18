@@ -1,5 +1,4 @@
-// C++ program to find the next optimal move for
-// a player
+// C program to find the next best move for AI
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -9,38 +8,48 @@
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
+// Create a structure for move object 
+// where the return value should give us row and col
 struct Move
 {
 	int row, col;
 };
 
+// Create x for player and o for opponent
 char player = 'X', opponent = 'O';
 
-// This function returns true if there are moves
-// remaining on the board. It returns false if
-// there are no moves left to play.
-bool isMovesLeft(char board[3][3])
+// This function is to check if there are empty spots in the board
+bool empty_spots(char board[3][3])
 {
+	// for every row
 	for (int i = 0; i<3; i++)
+		// for every column
 		for (int j = 0; j<3; j++)
+			// if there are empty spots
 			if (board[i][j]==' ')
+				// return true
 				return true;
+	// else return false
 	return false;
 }
 
-// This is the evaluation function as discussed
-// in the previous article ( http://goo.gl/sJgv68 )
-int evaluate(char b[3][3])
+// This is the check for win function
+int check_win(char b[3][3])
 {
 	// Checking for Rows for X or O victory.
 	for (int row = 0; row<3; row++)
 	{
+		// if there is a row that column 0 == 1 and 1 == 2
 		if (b[row][0]==b[row][1] &&
 			b[row][1]==b[row][2])
-		{
+		{	
+			// if row 0 symbol represents player which is X
 			if (b[row][0]==player)
+				// return +10 for player
 				return +10;
+			// else if row 0 symbol represents opponent which is )
 			else if (b[row][0]==opponent)
+				// return -10 for player
 				return -10;
 		}
 	}
@@ -48,31 +57,48 @@ int evaluate(char b[3][3])
 	// Checking for Columns for X or O victory.
 	for (int col = 0; col<3; col++)
 	{
+		// if there is a row that column 0 == 1 and 1 == 2
 		if (b[0][col]==b[1][col] &&
 			b[1][col]==b[2][col])
 		{
+			// if row 0 symbol represents player which is X
 			if (b[0][col]==player)
+				// return +10 for player
 				return +10;
-
+			// else if row 0 symbol represents opponent which is O
 			else if (b[0][col]==opponent)
+				// return -10 for player
 				return -10;
 		}
 	}
 
 	// Checking for Diagonals for X or O victory.
+	// if row 0 col 0 is == row 1 col 1 && 
+	// row 1 col 1 is == row 2 col 2
 	if (b[0][0]==b[1][1] && b[1][1]==b[2][2])
 	{
+		// if row 0 col 0 symbol represents player which is X		
 		if (b[0][0]==player)
+			// return +10 for player
 			return +10;
+		// else if row 0 col 0 symbol represents opponent which is O
 		else if (b[0][0]==opponent)
+			// return -10 for player
 			return -10;
 	}
 
+	// Checking for Diagonals for X or O victory.
+	// if row 0 col 2 is == row 1 col 1 && 
+	// row 1 col 1 is == row 2 col 0
 	if (b[0][2]==b[1][1] && b[1][1]==b[2][0])
 	{
+		// if row 0 col 2 symbol represents player which is X		
 		if (b[0][2]==player)
+			// return -10 for player
 			return +10;
+		// else if row 0 col 2 symbol represents opponent which is O
 		else if (b[0][2]==opponent)
+			// return -10 for player
 			return -10;
 	}
 
@@ -85,7 +111,7 @@ int evaluate(char b[3][3])
 // the value of the board
 int minimax(char board[3][3], int depth, bool isMax)
 {
-	int score = evaluate(board);
+	int score = check_win(board);
 
 	// If Maximizer has won the game return his/her
 	// evaluated score
@@ -99,7 +125,7 @@ int minimax(char board[3][3], int depth, bool isMax)
 
 	// If there are no more moves and no winner then
 	// it is a tie
-	if (isMovesLeft(board)==false)
+	if (empty_spots(board)==false)
 		return 0;
 
 	// If this maximizer's move
