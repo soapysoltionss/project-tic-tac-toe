@@ -252,9 +252,9 @@ int main()
 	char board_spots[3][3] =
 	{
 		// use static board to check the minimax function 
-		{ 'O', ' ', 'O' },
-		{ ' ', 'X', ' ' },
-		{ 'X', ' ', 'X' }
+		{ 'X', 'O', 'O' },
+		{ 'X', 'O', 'X' },
+		{ ' ', ' ', ' ' }
 	};
 
 	// The structure bestMove 
