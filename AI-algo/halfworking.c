@@ -16,25 +16,6 @@ struct Move
 
 char player = 'X', opponent = 'O';
 
-// this function is to randmise between player or ai
-int randomise_turns() {
-    // generate a random number each time this function runs
-    // create an int called rng (random number generator) 
-
-    //generate number between diff seed where they will use the clock time as the seed
-    srand(time(NULL));
-    int rng = rand();
-
-    // if the result of rng % is 0, means it is an even number, assign even number to player's turn
-    // odd number is ai
-    if (rng%2 == 0) {
-        printf("Player 1 Starts first! \n\n");
-    } else {
-        // else, if the result of rng % is not 0, means it is an odd number, assign even number to AI's turn
-        printf("AI will start first! \n\n");
-    }
-}
-
 // This function returns true if there are moves
 // remaining on the board. It returns false if
 // there are no moves left to play.
@@ -139,8 +120,7 @@ int minimax(char board[3][3], int depth, bool isMax)
 
 					// Call minimax recursively and choose
 					// the maximum value
-					best = max( best,
-						minimax(board, depth+1, !isMax) );
+					best = max( best, minimax(board, depth+1, !isMax) );
 
 					// Undo the move
 					board[i][j] = ' ';
@@ -168,8 +148,7 @@ int minimax(char board[3][3], int depth, bool isMax)
 
 					// Call minimax recursively and choose
 					// the minimum value
-					best = min(best,
-						minimax(board, depth+1, !isMax));
+					best = min(best, minimax(board, depth+1, !isMax));
 
 					// Undo the move
 					board[i][j] = ' ';
@@ -221,8 +200,7 @@ struct Move findBestMove(char board[3][3])
 		}
 	}
 
-	printf("The value of the best Move is : %d\n\n",
-			bestVal);
+	printf("The value of the best Move is : %d\n\n", bestVal);
 
 	return bestMove;
 }
@@ -232,9 +210,9 @@ int main()
 {
 	char board[3][3] =
 	{
-		{ 'X', ' ', ' ' },
-		{ ' ', ' ', ' ' },
-		{ 'O', ' ', 'O' }
+		{ 'X', 'X', 'O' },
+		{ 'X', 'O', 'O' },
+		{ ' ', ' ', ' ' }
 	};
 
 	struct Move bestMove = findBestMove(board);
