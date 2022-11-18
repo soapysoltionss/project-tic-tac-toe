@@ -19,14 +19,14 @@ struct Move
 char player = 'X', opponent = 'O';
 
 // This function is to check if there are empty spots in the board
-bool empty_spots(char board[3][3])
+bool empty_spots(char board_spots[3][3])
 {
 	// for every row
 	for (int i = 0; i<3; i++)
 		// for every column
 		for (int j = 0; j<3; j++)
 			// if there are empty spots
-			if (board[i][j]==' ')
+			if (board_spots[i][j]==' ')
 				// return true
 				return true;
 	// else return false
@@ -109,27 +109,26 @@ int check_win(char b[3][3])
 // This is the minimax function. It considers all
 // the possible ways the game can go and returns
 // the value of the board
-int minimax(char board[3][3], int depth, bool isMax)
+int minimax(char board_spots[3][3], int depth, bool isMaxTurn)
 {
 	// create an int variable called score
 	// give the score if there is a win
-	int score = check_win(board);
+	int score = check_win(board_spots);
 
 	// If Maximizer has won the game return his/her score
 	if (score == 10)
 		return score;
-
 	// If Minimizer has won the game return his/her score
 	if (score == -10)
 		return score;
 
 	// If there are no more moves and no winner then
 	// it is a tie
-	if (empty_spots(board)==false)
+	if (empty_spots(board_spots)==false)
 		return 0;
 
 	// If this maximizer's move
-	if (isMax)
+	if (isMaxTurn)
 	{
 		int best = -1000;
 
@@ -140,16 +139,16 @@ int minimax(char board[3][3], int depth, bool isMax)
 			for (int j = 0; j<3; j++)
 			{
 				// Check if spot is empty
-				if (board[i][j]==' ')
+				if (board_spots[i][j]==' ')
 				{
 					// Put X into the spot
-					board[i][j] = player;
+					board_spots[i][j] = player;
 
 					// Call minimax recursively and choose the highest value
-					best = max(best, minimax(board, depth+1, !isMax));
+					best = max(best, minimax(board_spots, depth+1, !isMaxTurn));
 
 					// Undo the move
-					board[i][j] = ' ';
+					board_spots[i][j] = ' ';
 				}
 			}
 		}
@@ -170,16 +169,16 @@ int minimax(char board[3][3], int depth, bool isMax)
 			for (int j = 0; j<3; j++)
 			{
 				// Check if spot is empty
-				if (board[i][j]==' ')
+				if (board_spots[i][j]==' ')
 				{
 					// Put O into the spot
-					board[i][j] = opponent;
+					board_spots[i][j] = opponent;
 
 					// Call minimax recursively and choose the lowest value
-					best = min(best, minimax(board, depth+1, !isMax));
+					best = min(best, minimax(board_spots, depth+1, !isMaxTurn));
 
 					// Undo the move
-					board[i][j] = ' ';
+					board_spots[i][j] = ' ';
 				}
 			}
 		}
@@ -191,10 +190,10 @@ int minimax(char board[3][3], int depth, bool isMax)
 
 // This will return the best possible move for the player who is X
 // create a struct object called find best move so that it will return row and col
-struct Move findBestMove(char board[3][3])
+struct Move findNextBestMove(char board_spots[3][3])
 {
 	// Create a value for best val of -1000
-	int bestVal = -1000;
+	int bestValue = -1000;
 	// Create a structure Move called best move
 	struct Move bestMove;
 	// let the row be -1
@@ -209,23 +208,23 @@ struct Move findBestMove(char board[3][3])
 		for (int j = 0; j<3; j++)
 		{
 			// Check if spot is empty
-			if (board[i][j]==' ')
+			if (board_spots[i][j]==' ')
 			{
 				// Make the move for player which is X 
-				board[i][j] = player;
+				board_spots[i][j] = player;
 
 				// call the minimax function for next move.
-				int moveVal = minimax(board, 0, false);
+				int currentMoveValue = minimax(board_spots, 0, false);
 
 				// Undo the move
-				board[i][j] = ' ';
+				board_spots[i][j] = ' ';
 
 				// If the value of the current move is
 				// higher than the best value, then update
 				// best move value
 
 				// if moveVal is higher than BestVal
-				if (moveVal > bestVal)
+				if (currentMoveValue > bestValue)
 				{
 					// set the bestMove.row 
 					// to the current move Val row which is i
@@ -235,13 +234,13 @@ struct Move findBestMove(char board[3][3])
 					bestMove.col = j;
 					// let the new value of best val 
 					// to be the current move val
-					bestVal = moveVal;
+					bestValue = currentMoveValue;
 				}
 			}
 		}
 	}
 	// print the value of the best move after computing minimax function
-	printf("The value of the best Move is : %d\n\n", bestVal);
+	printf("The value of the best Move is : %d\n\n", bestValue);
 	// return the new best move
 	return bestMove;
 }
@@ -250,17 +249,17 @@ struct Move findBestMove(char board[3][3])
 int main()
 {
 	// create a board of 2d array of 3x3
-	char board[3][3] =
+	char board_spots[3][3] =
 	{
 		// use static board to check the minimax function 
-		{ 'X', 'X', 'O' },
-		{ 'X', 'O', 'O' },
-		{ ' ', ' ', ' ' }
+		{ 'O', ' ', 'O' },
+		{ ' ', 'X', ' ' },
+		{ 'X', ' ', 'X' }
 	};
 
 	// The structure bestMove 
 	// should get the bestMove of the new spot 
-	struct Move bestMove = findBestMove(board);
+	struct Move bestMove = findNextBestMove(board_spots);
 
 	// Print the best move is
 	printf("The Best Move is :\n");
