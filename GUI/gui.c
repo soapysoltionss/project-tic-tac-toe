@@ -218,6 +218,7 @@ static void activate (GtkApplication *app, gpointer data){
     char item;
 
     combo = gtk_combo_box_text_new();
+    //gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, "-- Select game mode --");
     /*2 player mode*/
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, mode[0]);
     g_signal_connect(two_p, "clicked", G_CALLBACK(two_p_mode), NULL);
@@ -229,9 +230,9 @@ static void activate (GtkApplication *app, gpointer data){
     g_signal_connect(ml_easy, "clicked", G_CALLBACK(ml_ez_mode), NULL);
     /*1 player - ml hard mode*/
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, mode[3]);
-    g_signal_connect(ml_hard, "clicked", G_CALLBACK(ml_hard_mode), NULL);
+    g_signal_connect(ml_hard, "clicked", G_CALLBACK(ml_hard_mode), NULL);   
 
-    gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 1);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
     g_signal_connect(combo, "clicked", G_CALLBACK(print_home_button),NULL);
     gtk_grid_attach(GTK_GRID(grid), combo, 0,1,16,1);
     
@@ -343,10 +344,26 @@ static void activate (GtkApplication *app, gpointer data){
     
 }
 
-
 static void print_home_button(GtkWidget *widget, gpointer data){
     g_print("Home\n");
 }
+
+// /*menu to select mode*/
+// //https://www.cc.gatech.edu/data_files/public/doc/gtk/tutorial/gtk_tut-14.html
+// void menu(GtkApplication *menu, gpointer data){
+//     GtkWidget *window;
+//     GtkWidget *menu;
+//     GtkWidget *menu_items;
+
+//     /*create new window*/
+//     window = gtk_application_window_new(menu);
+//     gtk_window_set_title(GTK_WINDOW(window), "SELECT GAME MODE");
+
+//     menu = gtk_menu_new();
+//     g_menu_append_item(GMenu menu);
+
+// }
+
 
 static void disableTTT(){
     gtk_widget_set_sensitive(b00, FALSE);
