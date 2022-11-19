@@ -16,7 +16,7 @@ struct Move
 };
 
 // Create x for player and o for opponent
-char player = 'X', opponent = 'O';
+char opponent = 'X', player = 'O';
 
 // This function is to check if there are empty spots in the board
 bool empty_spots(char board_spots[3][3])
@@ -47,7 +47,7 @@ int check_win(char b[3][3])
 			if (b[row][0]==player)
 				// return +10 for player
 				return +10;
-			// else if row 0 symbol represents opponent which is )
+			// else if row 0 symbol represents opponent which is O
 			else if (b[row][0]==opponent)
 				// return -10 for player
 				return -10;
@@ -130,7 +130,7 @@ int minimax(char board_spots[3][3], int depth, bool isMaxTurn)
 	// If this maximizer's move
 	if (isMaxTurn)
 	{
-		int best = -1000;
+		int best = -100000;
 
 		// Check for every row
 		for (int i = 0; i<3; i++)
@@ -160,7 +160,7 @@ int minimax(char board_spots[3][3], int depth, bool isMaxTurn)
 	// If this minimizer's move
 	else
 	{
-		int best = 1000;
+		int best = 100000;
 
 		// For every row
 		for (int i = 0; i<3; i++)
@@ -253,7 +253,7 @@ int main()
 	{
 		// use static board to check the minimax function 
 		{ 'X', 'O', 'O' },
-		{ 'X', 'O', 'X' },
+		{ 'X', 'X', 'O' },
 		{ ' ', ' ', ' ' }
 	};
 
