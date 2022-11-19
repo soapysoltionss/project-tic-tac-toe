@@ -15,8 +15,8 @@ struct Move
 	int row, col;
 };
 
-// Create x for player and o for opponent
-char opponent = 'X', player = 'O';
+// Create x for player and o for ai
+char player = 'X', ai = 'O';
 
 // This function is to check if there are empty spots in the board
 bool empty_spots(char board_spots[3][3])
@@ -43,13 +43,13 @@ int check_win(char b[3][3])
 		if (b[row][0]==b[row][1] &&
 			b[row][1]==b[row][2])
 		{	
-			// if row 0 symbol represents player which is X
-			if (b[row][0]==player)
-				// return +10 for player
+			// if row 0 symbol represents ai which is O
+			if (b[row][0]==ai)
+				// return +10 for ai
 				return +10;
-			// else if row 0 symbol represents opponent which is O
-			else if (b[row][0]==opponent)
-				// return -10 for player
+			// else if row 0 symbol represents player which is X
+			else if (b[row][0]==player)
+				// return -10 for ai
 				return -10;
 		}
 	}
@@ -61,13 +61,13 @@ int check_win(char b[3][3])
 		if (b[0][col]==b[1][col] &&
 			b[1][col]==b[2][col])
 		{
-			// if row 0 symbol represents player which is X
-			if (b[0][col]==player)
-				// return +10 for player
+			// if row 0 symbol represents ai which is O
+			if (b[0][col]==ai)
+				// return +10 for ai
 				return +10;
-			// else if row 0 symbol represents opponent which is O
-			else if (b[0][col]==opponent)
-				// return -10 for player
+			// else if row 0 symbol represents player which is X
+			else if (b[0][col]==player)
+				// return -10 for ai
 				return -10;
 		}
 	}
@@ -77,13 +77,13 @@ int check_win(char b[3][3])
 	// row 1 col 1 is == row 2 col 2
 	if (b[0][0]==b[1][1] && b[1][1]==b[2][2])
 	{
-		// if row 0 col 0 symbol represents player which is X		
-		if (b[0][0]==player)
-			// return +10 for player
+		// if row 0 col 0 symbol represents ai which is O		
+		if (b[0][0]==ai)
+			// return +10 for ai
 			return +10;
-		// else if row 0 col 0 symbol represents opponent which is O
-		else if (b[0][0]==opponent)
-			// return -10 for player
+		// else if row 0 col 0 symbol represents player which is X
+		else if (b[0][0]==player)
+			// return -10 for ai
 			return -10;
 	}
 
@@ -92,13 +92,13 @@ int check_win(char b[3][3])
 	// row 1 col 1 is == row 2 col 0
 	if (b[0][2]==b[1][1] && b[1][1]==b[2][0])
 	{
-		// if row 0 col 2 symbol represents player which is X		
-		if (b[0][2]==player)
-			// return -10 for player
+		// if row 0 col 2 symbol represents ai which is O		
+		if (b[0][2]==ai)
+			// return -10 for ai
 			return +10;
-		// else if row 0 col 2 symbol represents opponent which is O
-		else if (b[0][2]==opponent)
-			// return -10 for player
+		// else if row 0 col 2 symbol represents player which is X
+		else if (b[0][2]==player)
+			// return -10 for ai
 			return -10;
 	}
 
@@ -142,7 +142,7 @@ int minimax(char board_spots[3][3], int depth, bool isMaxTurn)
 				if (board_spots[i][j]==' ')
 				{
 					// Put X into the spot
-					board_spots[i][j] = player;
+					board_spots[i][j] = ai;
 
 					// Call minimax recursively and choose the highest value
 					best = max(best, minimax(board_spots, depth+1, !isMaxTurn));
@@ -172,7 +172,7 @@ int minimax(char board_spots[3][3], int depth, bool isMaxTurn)
 				if (board_spots[i][j]==' ')
 				{
 					// Put O into the spot
-					board_spots[i][j] = opponent;
+					board_spots[i][j] = player;
 
 					// Call minimax recursively and choose the lowest value
 					best = min(best, minimax(board_spots, depth+1, !isMaxTurn));
@@ -188,7 +188,7 @@ int minimax(char board_spots[3][3], int depth, bool isMaxTurn)
 	}
 }
 
-// This will return the best possible move for the player who is X
+// This will return the best possible move for the ai who is O
 // create a struct object called find best move so that it will return row and col
 struct Move findNextBestMove(char board_spots[3][3])
 {
@@ -210,8 +210,8 @@ struct Move findNextBestMove(char board_spots[3][3])
 			// Check if spot is empty
 			if (board_spots[i][j]==' ')
 			{
-				// Make the move for player which is X 
-				board_spots[i][j] = player;
+				// Make the move for ai which is O 
+				board_spots[i][j] = ai;
 
 				// call the minimax function for next move.
 				int currentMoveValue = minimax(board_spots, 0, false);
@@ -260,7 +260,7 @@ int main()
 	// The structure bestMove 
 	// should get the bestMove of the new spot when calling the find next best move function
 	// inside this find next best move function, it will call the minimax function 
-	// This minimax function will return the best spot for the player
+	// This minimax function will return the best spot for the ai
 	struct Move bestMove = findNextBestMove(board_spots);
 
 	// Print the best move is
