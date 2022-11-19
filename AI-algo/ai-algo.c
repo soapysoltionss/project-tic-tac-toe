@@ -240,11 +240,12 @@ struct Move findNextBestMove(char board_spots[3][3])
 		}
 	}
 	// print the value of the best move after computing minimax function
-	printf("The value of the best Move is : %d\n\n", bestValue);
+	//printf("The value of the best Move is : %d\n\n", bestValue);
 	// return the new best move
 	return bestMove;
 }
 
+/*
 // Main function
 int main()
 {
@@ -269,3 +270,4 @@ int main()
 	printf("ROW: %d COL: %d\n\n", bestMove.row, bestMove.col );
 	return 0;
 }
+*/
