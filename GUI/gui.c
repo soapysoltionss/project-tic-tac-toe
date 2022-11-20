@@ -116,7 +116,6 @@ static void activate (GtkApplication *app, gpointer data){
     char item;
 
     combo = gtk_combo_box_text_new();
-    //gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, "-- Select game mode --");
     //2 player mode
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, mode[0]);
     g_signal_connect(two_p, "clicked", G_CALLBACK(two_p_mode), NULL);
