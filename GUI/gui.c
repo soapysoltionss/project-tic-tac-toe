@@ -292,7 +292,10 @@ static bool win(){
     for (int row = 0; row < 3; ++row) {
         if (board[row][0] == board[row][1] 
         && board[row][1] == board[row][2]) {
-            if (board[row][0] == 'X') {
+             if (board[row][0] == ' ') {
+                continue;
+            }
+            else if (board[row][0] == 'X') {
                 printf("%c wins with x on row \n",PLAYER[(turn-1)%2]);
                 return true;
             }
@@ -306,16 +309,19 @@ static bool win(){
         }
     }
 
-    /*  check for COLUMN WIN
-        for loop for every column
-        check if row 0, 1, 2 are the same
-        if they are they same, then check char,
-        check if player or AI won
-        esle if row are not the same, return 0 */
+    // check for column wins
+    // for loop for every column
+    // check if row 0, 1, 2 are the same
+    // if they are they same, then check char,
+    // check if player or AI won
+    // esle if row are not the same, return 0
     for (int col = 0; col < 3; ++col) {
         if (board[0][col] == board[1][col] 
         && board[1][col] == board[2][col]) {
-            if (board[0][col] == 'X') {
+            if (board[0][col] == ' ') {
+                continue;
+            }
+            else if (board[0][col] == 'X') {
                 printf("%c wins with x on column \n",PLAYER[(turn-1)%2]);
                 return true;
             }
@@ -331,8 +337,7 @@ static bool win(){
 
     /*  check for DIAGONAL WIN in "\" slope
         check if box 0, 4, 8 OR box 3, 4, 6 are the same
-        box 0 = [0][0], box 4 = [1][1] , box 8 = [2][2], box 3 = [1][0], box 4 = [1][1], box 6 = [2][0] */
-    
+        box 0 = [0][0], box 4 = [1][1] , box 8 = [2][2], box 3 = [1][0], box 4 = [1][1], box 6 = [2][0] */    
     if (board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
             if (board[0][0] == 'X') {
                 printf("%c wins with x on diagonal \n",PLAYER[(turn-1)%2]);
@@ -398,9 +403,8 @@ static void updateBoard(int x, int y,GtkWidget *widget, gpointer button){
         turn += 1; // increment turn
         gtk_widget_set_sensitive(button, FALSE); // disable spot by setting to False
     }
-    GtkButton *change_button = (GtkButton *) button;
     tile[0] = board[x][y];
-    gtk_button_set_label (change_button, tile); // updating button to X or O 
+    gtk_button_set_label ((gpointer)button, tile); //updatiupdating button to X or O
     printBoard(board);
     
     /* DRAW */
@@ -520,26 +524,23 @@ static void updateBoard(int x, int y,GtkWidget *widget, gpointer button){
                                             GTK_BUTTONS_OK,
                                             "WINNER: %s !","AI");
             gtk_window_set_title(GTK_WINDOW(winDialog), "PM Tic-Tac-Toe Project");
-            //gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (winDialog),"message");
             g_signal_connect (winDialog, "response", G_CALLBACK (gtk_window_destroy), NULL);
             gtk_widget_show (winDialog);
 
             //add win
             if ((turn-1)%2==0){
                 x_win+=1;
-                change_button = (GtkButton *) xScore;
                 char str_int[5];
                 char currentPlayer[15];
                 strcpy(currentPlayer, playerName[0]);
-                gtk_button_set_label (change_button, (strcat(strcat(currentPlayer,": "),itoa(x_win,str_int,10))));
+                gtk_button_set_label ((gpointer)xScore, (strcat(strcat(currentPlayer,": "),itoa(x_win,str_int,10))));
             }
             else if ((turn-1)%2==1){
                 ai_win+=1;
-                change_button = (GtkButton *) aiScore;
                 char str_int[5];
                 char currentPlayer[15];
                 strcpy(currentPlayer, "AI");
-                gtk_button_set_label (change_button,(strcat(strcat(currentPlayer,": "),itoa(ai_win,str_int,10))));
+                gtk_button_set_label ((gpointer)aiScore,(strcat(strcat(currentPlayer,": "),itoa(ai_win,str_int,10))));
             }
             disableTTT();
         }
