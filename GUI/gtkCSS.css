@@ -1,0 +1,40 @@
+
+button {
+    background: #ec4d03;
+    font-family: Helvetica, Verdana, sans-serif;
+}
+
+
+button:hover {
+  background: #9109ec;
+}
+
+
+
+.mode_button{
+    background: #000080;
+    color: white;
+}
+.mode_button:disabled{
+    background: rgb(0, 0, 0);
+}
+
+.header{
+    background:#E9967A;
+    font-size: large;
+    color:crimson;
+    font-weight: bold;
+}
+
+.ttt{
+    background:aquamarine;
+}
+
+/* 'O' colour */
+.ttt:disabled{ 
+    background: lightblue;
+}
+/* 'X' colour */
+.ttt_X{
+    background: pink;
+}

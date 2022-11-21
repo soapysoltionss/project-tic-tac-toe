@@ -17,8 +17,9 @@ struct Move
 };
 
 // Create x for player and o for ai_player
-char player = 'X', ai_player = 'O';
+//char player = 'X', ai_player = 'O';
 
+/*
 // This function is to check if there are empty spots in the board
 bool empty_spots(char board_spots[3][3])
 {
@@ -106,11 +107,12 @@ int check_win(char b[3][3])
 	// Else if none of them have won then return 0
 	return 0;
 }
+*/
 
 // This is the minimax function. It considers all
 // the possible ways the game can go and returns
 // the value of the board
-int minimax(char board_spots[3][3], int depth, bool isMaxTurn)
+int ez_minimax(char board_spots[3][3], int depth, bool isMaxTurn)
 {
 	// create an int variable called score
 	// give the score if there is a win
@@ -146,7 +148,7 @@ int minimax(char board_spots[3][3], int depth, bool isMaxTurn)
 					board_spots[i][j] = ai_player;
 
 					// Call minimax recursively and choose the highest value
-					best = max(best, minimax(board_spots, depth+1, !isMaxTurn));
+					best = max(best, ez_minimax(board_spots, depth+1, !isMaxTurn));
 
 					// Undo the move
 					board_spots[i][j] = ' ';
@@ -175,9 +177,12 @@ int minimax(char board_spots[3][3], int depth, bool isMaxTurn)
 					// Put O into the spot
 					board_spots[i][j] = player;
 
+					if(depth<2){
 					// Call minimax recursively and choose the lowest value
-					best = min(best, minimax(board_spots, depth+1, !isMaxTurn));
-
+					best = min(best, ez_minimax(board_spots, depth+1, !isMaxTurn));
+					}else{
+						best=best;
+					}
 					// Undo the move
 					board_spots[i][j] = ' ';
 				}
@@ -189,9 +194,10 @@ int minimax(char board_spots[3][3], int depth, bool isMaxTurn)
 	}
 }
 
+
 // This will return the best possible move for the ai_player who is O
 // create a struct object called find best move so that it will return row and col
-struct Move findNextBestMove(char board_spots[3][3])
+struct Move findNextMove(char board_spots[3][3])
 {
 	// Create a value for best val of -1000
 	int bestValue = -1000;
@@ -215,7 +221,7 @@ struct Move findNextBestMove(char board_spots[3][3])
 				board_spots[i][j] = ai_player;
 
 				// call the minimax function for next move.
-				int currentMoveValue = minimax(board_spots, 0, false);
+				int currentMoveValue = ez_minimax(board_spots, 0, false);
 
 				// Undo the move
 				board_spots[i][j] = ' ';
@@ -255,7 +261,7 @@ int mai_playern()
 	{
 		// use static board to check the minimax function 
 		{ 'X', 'O', 'O' },
-		{ 'X', 'X', 'O' },
+		{ 'X', 'X', '' },
 		{ ' ', ' ', ' ' }
 	};
 
@@ -263,7 +269,7 @@ int mai_playern()
 	// should get the bestMove of the new spot when calling the find next best move function
 	// inside this find next best move function, it will call the minimax function 
 	// This minimax function will return the best spot for the ai_player
-	struct Move bestMove = findNextBestMove(board_spots);
+	struct Move bestMove = findNextMove(board_spots);
 
 	// Print the best move is
 	printf("The Best Move is :\n");
