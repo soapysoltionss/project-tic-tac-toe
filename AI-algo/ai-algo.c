@@ -10,7 +10,7 @@
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
 // add counter to check number of times minimax function is called
-int counter;
+int counter1;
 // Create a structure for move object 
 // where the return value should give us row and col
 struct Move
@@ -115,7 +115,7 @@ int check_win(char b[3][3])
 int minimax(char board_spots[3][3], int depth, int alpha, int beta, bool isMaxTurn)
 {
 	// counts everytime minimax is called
-	counter++;
+	counter1++;
 	// create an int variable called score
 	// give the score if there is a win
 	int score = check_win(board_spots);
@@ -273,7 +273,7 @@ struct Move findNextBestMove(char board_spots[3][3])
 	// print the value of the best move after computing minimax function
 	//printf("The value of the best Move is : %d\n\n", bestValue);
 	// print number of times minimax function is called; showing memory efficiency
-	printf("Number of minimax tries: %i", counter);
+	printf("Number of minimax tries: %i \n", counter1);
 	// return the new best move
 	return bestMove;
 }
