@@ -9,6 +9,9 @@
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
+// add counter to check number of times minimax function is called
+int counter;
+
 // Create a structure for move object 
 // where the return value should give us row and col
 struct Move
@@ -112,8 +115,10 @@ int check_win(char b[3][3])
 // This is the minimax function. It considers all
 // the possible ways the game can go and returns
 // the value of the board
-int ez_minimax(char board_spots[3][3], int depth, bool isMaxTurn)
+int ez_minimax(char board_spots[3][3], int alpha, int beta, int depth, bool isMaxTurn)
 {
+	// counts everytime minimax is called
+	counter++;
 	// create an int variable called score
 	// give the score if there is a win
 	int score = check_win(board_spots);
@@ -133,6 +138,7 @@ int ez_minimax(char board_spots[3][3], int depth, bool isMaxTurn)
 	// If this maximizer's move
 	if (isMaxTurn)
 	{
+		int eval;
 		int best = -100000;
 
 		// Check for every row
@@ -148,10 +154,20 @@ int ez_minimax(char board_spots[3][3], int depth, bool isMaxTurn)
 					board_spots[i][j] = ai_player;
 
 					// Call minimax recursively and choose the highest value
-					best = max(best, ez_minimax(board_spots, depth+1, !isMaxTurn));
+					eval = ez_minimax(board_spots, depth+1, alpha, beta, !isMaxTurn);
+					best = max(best, eval);
 
 					// Undo the move
 					board_spots[i][j] = ' ';
+
+					// alpha-beta pruning
+					// alpha will be the best score maximizer will get
+					alpha = max(alpha, eval);
+					// check if score is the best score
+					if(alpha > beta){
+						// since found, no need to continue with other options
+						break;
+					}
 				}
 			}
 		}
@@ -163,6 +179,7 @@ int ez_minimax(char board_spots[3][3], int depth, bool isMaxTurn)
 	// If this minimizer's move
 	else
 	{
+		int eval;
 		int best = 100000;
 
 		// For every row
@@ -179,12 +196,22 @@ int ez_minimax(char board_spots[3][3], int depth, bool isMaxTurn)
 
 					if(depth<2){
 					// Call minimax recursively and choose the lowest value
-					best = min(best, ez_minimax(board_spots, depth+1, !isMaxTurn));
+					eval = ez_minimax(board_spots, depth+1, alpha, beta, !isMaxTurn);
+					best = min(best, eval);
 					}else{
 						best=best;
 					}
 					// Undo the move
 					board_spots[i][j] = ' ';
+
+					// alpha-beta pruning
+					// beta is best score minimizer will get
+					beta = min(beta, eval);
+					// check if score is best score
+					if(beta <= alpha){
+						// since found, no need to continue with other options
+						break;
+					}
 				}
 			}
 		}
@@ -199,6 +226,10 @@ int ez_minimax(char board_spots[3][3], int depth, bool isMaxTurn)
 // create a struct object called find best move so that it will return row and col
 struct Move findNextMove(char board_spots[3][3])
 {
+	// alpha set to worst score for maximizer
+	int alpha = -100000;
+	// beta set to worst score for minimizer
+	int beta = 100000;
 	// Create a value for best val of -1000
 	int bestValue = -1000;
 	// Create a structure Move called best move
@@ -221,7 +252,7 @@ struct Move findNextMove(char board_spots[3][3])
 				board_spots[i][j] = ai_player;
 
 				// call the minimax function for next move.
-				int currentMoveValue = ez_minimax(board_spots, 0, false);
+				int currentMoveValue = ez_minimax(board_spots, alpha, beta, 0, false);
 
 				// Undo the move
 				board_spots[i][j] = ' ';
@@ -248,6 +279,8 @@ struct Move findNextMove(char board_spots[3][3])
 	}
 	// print the value of the best move after computing minimax function
 	//printf("The value of the best Move is : %d\n\n", bestValue);
+	// print number of times minimax function is called; showing memory efficiency
+	printf("Number of minimax tries: %i", counter);
 	// return the new best move
 	return bestMove;
 }
