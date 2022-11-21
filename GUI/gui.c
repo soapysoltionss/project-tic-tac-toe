@@ -550,7 +550,9 @@ static void updateBoard(int x, int y,GtkWidget *widget, gpointer button){
     }
 }
 
-/* Settings attempt
+/* SETTINGS ATTEMPT
+//https://stackoverflow.com/questions/44997120/printing-value-of-entry-box-in-a-dialog-in-gtk-c
+//https://hackthedeveloper.com/gtk-entry-user-input/ 
 static void print_text(GtkWidget *widget, gint response_id, gpointer data){
     GtkEntry *entry = data;
     printf("%s", gtk_entry_get_text(entry));
