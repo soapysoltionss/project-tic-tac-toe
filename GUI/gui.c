@@ -627,52 +627,6 @@ static void updateBoard(int x, int y,GtkWidget *widget, gpointer button){
     }
 }
 
-/* SETTINGS ATTEMPT
-//https://stackoverflow.com/questions/44997120/printing-value-of-entry-box-in-a-dialog-in-gtk-c
-//https://hackthedeveloper.com/gtk-entry-user-input/ 
-static void print_text(GtkWidget *widget, gint response_id, gpointer data){
-    GtkEntry *entry = data;
-    printf("%s", gtk_entry_get_text(entry));
-    gtk_widget_destroy(widget); // Close dialog
-}
-
-static void settings(GtkWidget *widget, gpointer data){
-    GtkWindow *window = data;
-    GtkLabel *label;
-    GtkEntry *textbox;
-    GtkWidget *dialog, *saveButton;
-
-    //window = gtk_application_window_new(app);
-    //gtk_window_set_title(GTK_WINDOW(window), "Edit profile");
-    dialog = gtk_message_dialog_new("User profile",
-                                    window,
-                                    GTK_MESSAGE_INFO,
-                                    GTK_DIALOG_MODAL,
-                                    NULL);
-
-
-    label = gtk_label_new("Username: ");
-    textbox = gtk_entry_new();
-    gtk_entry_set_text(textbox, "Enter username here");
-    //const gchar *username = gtk_entry_get_text(GTK_ENTRY(entry));
-
-    gtk_widget_show(dialog);
-    g_signal_connect(GTK_DIALOG (dialog), "response", G_CALLBACK (print_text), textbox);
-}
-
-static void settingsActivate(GtkApplication *app, gpointer data){
-    GtkWidget *window, *button, *entry;
-
-    window = gtk_application_window_new(app);
-    gtk_window_set_title(GTK_WINDOW(window), "User profile");
-
-    button = gtk_button_new_with_label("Save");
-    g_signal_connect(button, "clicked", G_CALLBACK(settings), NULL);
-    
-    gtk_widget_show(window);
-}
-*/
-
 /* Callback to Change Mode */
 static void two_p_mode(GtkWidget *widget, gpointer data){
     resetBoard(); // Reset Board
