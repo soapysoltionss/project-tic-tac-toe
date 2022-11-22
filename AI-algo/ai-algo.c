@@ -161,7 +161,7 @@ int minimax(char board_spots[3][3], int alpha, int beta, int depth, bool isMaxTu
 					// alpha will be the best score maximizer will get
 					alpha = max(alpha, eval);
 					// check if score is the best score
-					if(alpha > beta){
+					if(alpha >= beta){
 						// since found, no need to continue with other options
 						break;
 					}
