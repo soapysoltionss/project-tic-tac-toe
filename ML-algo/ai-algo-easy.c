@@ -153,9 +153,17 @@ int ez_minimax(char board_spots[3][3], int alpha, int beta, int depth, bool isMa
 					// Put X into the spot
 					board_spots[i][j] = ai_player;
 
-					// Call minimax recursively and choose the highest value
-					eval = ez_minimax(board_spots, alpha, beta, depth+1, !isMaxTurn);
-					best = max(best, eval);
+					// Check if max depth has been reached
+					if(depth<2)
+					{
+						// Call minimax recursively and choose the highest value
+						eval = ez_minimax(board_spots, alpha, beta, depth+1, !isMaxTurn);
+						best = max(best, eval);
+					}
+					else
+					{
+						best=best;
+					}
 
 					// Undo the move
 					board_spots[i][j] = ' ';
@@ -194,11 +202,15 @@ int ez_minimax(char board_spots[3][3], int alpha, int beta, int depth, bool isMa
 					// Put O into the spot
 					board_spots[i][j] = player;
 
-					if(depth<2){
-					// Call minimax recursively and choose the lowest value
-					eval = ez_minimax(board_spots, alpha, beta, depth+1, !isMaxTurn);
-					best = min(best, eval);
-					}else{
+					// Check if max depth has been reached
+					if(depth<2)
+					{
+						// Call minimax recursively and choose the lowest value
+						eval = ez_minimax(board_spots, alpha, beta, depth+1, !isMaxTurn);
+						best = min(best, eval);
+					}
+					else
+					{
 						best=best;
 					}
 					// Undo the move
