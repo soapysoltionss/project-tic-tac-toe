@@ -584,7 +584,6 @@ static void updateBoard(int x, int y,GtkWidget *widget, gpointer button){
             }
             else if ((turn-1)%2==1){
                 //dialog msg for win + disableTTT 
-                //*NOTE: make new game button(sensitive false default + hide)
                 GtkWidget *winDialog;
                 if(currentMode==1){
                     winDialog = gtk_message_dialog_new (GTK_WINDOW(widget),
